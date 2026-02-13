@@ -6,42 +6,27 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('nip', 50)->unique();
             $table->string('name');
-            $table->string('email')->nullable()->unique();
-            $table->string('role')->default('pegawai');
+            $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
         });
-
-        Schema::create('pegawai', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->string('nip', 50)->unique();
-            $table->string('nama_lengkap', 150);
-            $table->string('jabatan', 100)->nullable();
-            $table->string('departemen', 100)->nullable();
-            $table->enum('jenis_kelamin', ['L', 'P'])->nullable();
-            $table->date('tanggal_lahir')->nullable();
-            $table->string('no_telepon', 20)->nullable();
-            $table->text('alamat')->nullable();
-            $table->date('tanggal_masuk')->nullable();
-            $table->enum('status_kepegawaian', ['aktif', 'nonaktif', 'kontrak'])->default('aktif');
-            $table->unsignedInteger('kuota_cuti')->default(12);
-            $table->unsignedInteger('sisa_cuti')->default(12);
-            $table->timestamps();
-        });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('pegawai');
         Schema::dropIfExists('users');
     }
 };

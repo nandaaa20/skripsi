@@ -38,11 +38,6 @@
                 </div>
             </div>
         @endif
-        @if ($errors->has('sisa_cuti'))
-            <div class="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
-                {{ $errors->first('sisa_cuti') }}
-            </div>
-        @endif
 
         {{-- Info Banner --}}
         <div class="mb-6 bg-emerald-50 border-l-4 border-emerald-400 p-4 rounded-r-lg">

@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Pegawai;
 
 use App\Http\Controllers\Controller;
-use App\Mail\CutiSubmissionToAdmin;
 use App\Models\Cuti;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Mail;
 
 class CutiController extends Controller
 {
@@ -95,15 +92,7 @@ class CutiController extends Controller
             $currentDate->addDay();
         }
 
-        if ($pegawai->sisa_cuti < $jumlahHariKerja) {
-            return back()
-                ->withErrors([
-                    'sisa_cuti' => 'Sisa cuti tidak mencukupi untuk durasi yang diajukan.',
-                ])
-                ->withInput();
-        }
-
-        $cuti = Cuti::create([
+        Cuti::create([
             'pegawai_id' => $pegawai->id,
             'tanggal_mulai' => $validated['tanggal_mulai'],
             'tanggal_selesai' => $validated['tanggal_selesai'],
@@ -112,15 +101,6 @@ class CutiController extends Controller
             'status' => 'pending',
             'jumlah_hari' => $jumlahHariKerja, // Simpan jumlah hari kerja saja
         ]);
-
-        $adminEmails = User::where('role', 'admin')
-            ->whereNotNull('email')
-            ->pluck('email')
-            ->all();
-
-        if (!empty($adminEmails)) {
-            Mail::to($adminEmails)->send(new CutiSubmissionToAdmin($cuti));
-        }
 
         return redirect()
             ->route('pegawai.cuti.index')

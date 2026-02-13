@@ -33,17 +33,6 @@
             </div>
         @endif
 
-        {{-- Leave Balance --}}
-        <div class="mb-6 bg-white rounded-lg shadow-sm border border-emerald-100 p-4">
-            <div class="flex flex-col gap-1">
-                <p class="text-xs font-medium text-emerald-600 uppercase tracking-wider">Sisa Cuti</p>
-                <div class="flex items-end gap-2">
-                    <p class="text-2xl font-semibold text-emerald-700">{{ $pegawai?->sisa_cuti ?? 0 }}</p>
-                    <p class="text-xs text-gray-500">dari {{ $pegawai?->kuota_cuti ?? 0 }} hari</p>
-                </div>
-            </div>
-        </div>
-
         {{-- Stats Summary --}}
         @if($cuti->count() > 0)
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

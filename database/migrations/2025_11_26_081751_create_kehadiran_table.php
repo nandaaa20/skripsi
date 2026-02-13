@@ -10,14 +10,13 @@ return new class extends Migration
     {
         Schema::create('kehadiran', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pegawai_id')->constrained('pegawai')->cascadeOnDelete();
+            $table->foreignId('pegawai_id')->constrained('pegawai')->onDelete('cascade');
             $table->date('tanggal');
             $table->enum('status', ['hadir', 'izin', 'sakit', 'alpha']);
             $table->text('keterangan')->nullable();
             $table->timestamps();
 
-            $table->unique(['pegawai_id', 'tanggal']);
-            $table->index(['tanggal', 'status']);
+            $table->unique(['pegawai_id', 'tanggal']); // satu catatan per hari per pegawai
         });
     }
 
@@ -26,3 +25,4 @@ return new class extends Migration
         Schema::dropIfExists('kehadiran');
     }
 };
+

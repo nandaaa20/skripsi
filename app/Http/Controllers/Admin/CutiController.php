@@ -3,12 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Mail\CutiStatusToPegawai;
 use App\Models\Cuti;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use Carbon\Carbon;
 
 class CutiController extends Controller
 {
@@ -23,7 +19,7 @@ class CutiController extends Controller
 
     public function show(Cuti $cuti)
     {
-        $cuti->load('pegawai.user');
+        $cuti->load('pegawai');
         return view('admin.cuti.show', compact('cuti'));
     }
 
@@ -41,50 +37,10 @@ class CutiController extends Controller
             'catatan_admin' => 'nullable|string',
         ]);
 
-        $cuti->load('pegawai');
-
-        $jumlahHari = $cuti->jumlah_hari;
-        if (!$jumlahHari || $jumlahHari <= 0) {
-            $start = Carbon::parse($cuti->tanggal_mulai);
-            $end = Carbon::parse($cuti->tanggal_selesai);
-            $jumlahHari = 0;
-            $currentDate = $start->copy();
-
-            while ($currentDate->lte($end)) {
-                if (!$currentDate->isWeekend()) {
-                    $jumlahHari++;
-                }
-                $currentDate->addDay();
-            }
-        }
-
-        if ($request->status === 'disetujui' && $cuti->pegawai) {
-            $sisaCuti = $cuti->pegawai->sisa_cuti ?? 0;
-            if ($sisaCuti < $jumlahHari) {
-                return redirect()
-                    ->route('admin.cuti.show', $cuti)
-                    ->with('error', 'Sisa cuti pegawai tidak mencukupi untuk menyetujui pengajuan ini.');
-            }
-        }
-
-        DB::transaction(function () use ($request, $cuti, $jumlahHari) {
-            if ($request->status === 'disetujui' && $cuti->pegawai) {
-                $sisaCuti = $cuti->pegawai->sisa_cuti ?? 0;
-                $cuti->pegawai->update([
-                    'sisa_cuti' => $sisaCuti - $jumlahHari,
-                ]);
-            }
-
-            $cuti->update([
-                'status'        => $request->status,
-                'catatan_admin' => $request->catatan_admin,
-            ]);
-        });
-
-        $pegawaiEmail = $cuti->pegawai?->user?->email;
-        if ($pegawaiEmail) {
-            Mail::to($pegawaiEmail)->send(new CutiStatusToPegawai($cuti));
-        }
+        $cuti->update([
+            'status'        => $request->status,
+            'catatan_admin' => $request->catatan_admin,
+        ]);
 
         return redirect()
             ->route('admin.cuti.show', $cuti)
