@@ -68,6 +68,7 @@ class PegawaiController extends Controller
             'departemen'        => 'nullable|string|max:100',
             'jenis_kelamin'     => 'nullable|in:L,P',
             'tanggal_lahir'     => 'nullable|date',
+            'email'             => 'nullable|email:rfc,dns|max:255|unique:users,email',
             'no_telepon'        => 'nullable|string|max:20',
             'alamat'            => 'nullable|string',
             'tanggal_masuk'     => 'nullable|date',
@@ -81,7 +82,7 @@ class PegawaiController extends Controller
         $user = User::create([
             'nip'      => $request->nip,
             'name'     => $request->nama_lengkap, // <-- WAJIB PAKAI INI
-            'email'    => null,
+            'email'    => $request->email,
             'password' => Hash::make($passwordAwal),
             'role'     => 'pegawai',
         ]);
@@ -145,6 +146,7 @@ class PegawaiController extends Controller
             'departemen'        => 'nullable|string|max:100',
             'jenis_kelamin'     => 'nullable|in:L,P',
             'tanggal_lahir'     => 'nullable|date',
+            'email'             => 'nullable|email:rfc,dns|max:255|unique:users,email,' . $pegawai->user_id,
             'no_telepon'        => 'nullable|string|max:20',
             'alamat'            => 'nullable|string',
             'tanggal_masuk'     => 'nullable|date',
@@ -155,7 +157,8 @@ class PegawaiController extends Controller
         if ($pegawai->user) {
             $pegawai->user->update([
                 'nip'  => $request->nip,
-                'name' => $request->nama_lengkap, // <-- WAJIB DICANTUMKAN
+                'name'  => $request->nama_lengkap, // <-- WAJIB DICANTUMKAN
+                'email' => $request->email,
             ]);
         }
 
