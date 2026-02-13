@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Cuti;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class CutiController extends Controller
 {
@@ -19,13 +21,13 @@ class CutiController extends Controller
 
     public function show(Cuti $cuti)
     {
-        $cuti->load('pegawai');
+        $cuti->load('pegawai.user');
+
         return view('admin.cuti.show', compact('cuti'));
     }
 
     public function updateStatus(Request $request, Cuti $cuti)
     {
-        // Jika status sudah pernah diputuskan, jangan boleh diubah lagi
         if ($cuti->status !== 'pending') {
             return redirect()
                 ->route('admin.cuti.show', $cuti)
@@ -33,18 +35,44 @@ class CutiController extends Controller
         }
 
         $request->validate([
-            'status'        => 'required|in:disetujui,ditolak',
+            'status' => 'required|in:disetujui,ditolak',
             'catatan_admin' => 'nullable|string',
         ]);
 
-        $cuti->update([
-            'status'        => $request->status,
-            'catatan_admin' => $request->catatan_admin,
-        ]);
+        if ($request->status === 'disetujui' && $cuti->pegawai && $cuti->pegawai->sisa_cuti < $cuti->jumlah_hari) {
+            return redirect()
+                ->route('admin.cuti.show', $cuti)
+                ->with('error', 'Sisa cuti pegawai tidak mencukupi untuk menyetujui pengajuan ini.');
+        }
+
+        DB::transaction(function () use ($request, $cuti) {
+            $cuti->update([
+                'status' => $request->status,
+                'catatan_admin' => $request->catatan_admin,
+            ]);
+
+            if ($request->status === 'disetujui') {
+                $pegawai = $cuti->pegawai()->lockForUpdate()->first();
+
+                if ($pegawai) {
+                    $pegawai->sisa_cuti -= $cuti->jumlah_hari;
+                    $pegawai->save();
+                }
+            }
+        });
+
+        $cuti->refresh();
+
+        $emailPegawai = $cuti->pegawai?->user?->email;
+        if ($emailPegawai) {
+            Mail::raw("Status cuti Anda: {$cuti->status}.", function ($message) use ($emailPegawai) {
+                $message->to($emailPegawai)
+                    ->subject('Status Pengajuan Cuti');
+            });
+        }
 
         return redirect()
             ->route('admin.cuti.show', $cuti)
             ->with('success', 'Status pengajuan cuti berhasil diperbarui.');
     }
-
 }

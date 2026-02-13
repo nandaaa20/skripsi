@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Pegawai;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cuti;
-use Illuminate\Http\Request;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class CutiController extends Controller
 {
@@ -13,7 +15,7 @@ class CutiController extends Controller
     {
         $pegawai = auth()->user()->pegawai;
 
-        if (!$pegawai) {
+        if (! $pegawai) {
             $cuti = collect();
         } else {
             $cuti = Cuti::where('pegawai_id', $pegawai->id)
@@ -28,7 +30,7 @@ class CutiController extends Controller
     {
         $pegawai = auth()->user()->pegawai;
 
-        if (!$pegawai) {
+        if (! $pegawai) {
             abort(403, 'Data pegawai belum terdaftar');
         }
 
@@ -39,7 +41,7 @@ class CutiController extends Controller
     {
         $pegawai = auth()->user()->pegawai;
 
-        if (!$pegawai) {
+        if (! $pegawai) {
             abort(403, 'Data pegawai belum terdaftar');
         }
 
@@ -77,19 +79,23 @@ class CutiController extends Controller
             'alasan.required' => 'Alasan pengajuan cuti harus diisi.',
         ]);
 
-        // Hitung jumlah hari kerja (exclude weekend)
         $start = Carbon::parse($validated['tanggal_mulai']);
         $end = Carbon::parse($validated['tanggal_selesai']);
-        
+
         $jumlahHariKerja = 0;
         $currentDate = $start->copy();
-        
+
         while ($currentDate->lte($end)) {
-            // Hitung hanya hari kerja (Senin-Jumat)
-            if (!$currentDate->isWeekend()) {
+            if (! $currentDate->isWeekend()) {
                 $jumlahHariKerja++;
             }
             $currentDate->addDay();
+        }
+
+        if ($jumlahHariKerja > $pegawai->sisa_cuti) {
+            return back()
+                ->withInput()
+                ->withErrors(['jumlah_hari' => 'Sisa cuti tidak mencukupi untuk durasi yang diajukan.']);
         }
 
         Cuti::create([
@@ -99,8 +105,20 @@ class CutiController extends Controller
             'jenis_cuti' => $validated['jenis_cuti'],
             'alasan' => $validated['alasan'],
             'status' => 'pending',
-            'jumlah_hari' => $jumlahHariKerja, // Simpan jumlah hari kerja saja
+            'jumlah_hari' => $jumlahHariKerja,
         ]);
+
+        $admins = User::where('role', 'admin')
+            ->whereNotNull('email')
+            ->pluck('email')
+            ->all();
+
+        if (! empty($admins)) {
+            Mail::raw("Ada pengajuan cuti baru dari {$pegawai->nama_lengkap} ({$pegawai->nip}) selama {$jumlahHariKerja} hari kerja.", function ($message) use ($admins) {
+                $message->to($admins)
+                    ->subject('Pengajuan Cuti Baru');
+            });
+        }
 
         return redirect()
             ->route('pegawai.cuti.index')

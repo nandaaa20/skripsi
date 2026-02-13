@@ -24,6 +24,8 @@ class Pegawai extends Model
         'alamat',
         'tanggal_masuk',
         'status_kepegawaian',
+        'kuota_cuti',
+        'sisa_cuti',
     ];
 
     // Agar tidak ada overwrite mass assignment

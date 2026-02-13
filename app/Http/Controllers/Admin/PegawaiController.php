@@ -100,6 +100,8 @@ class PegawaiController extends Controller
             'alamat'            => $request->alamat,
             'tanggal_masuk'     => $request->tanggal_masuk,
             'status_kepegawaian'=> $request->status_kepegawaian ?? 'aktif',
+            'kuota_cuti'        => 12,
+            'sisa_cuti'         => 12,
         ]);
 
         return redirect()
