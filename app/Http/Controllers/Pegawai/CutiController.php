@@ -93,9 +93,13 @@ class CutiController extends Controller
         }
 
         if ($jumlahHariKerja > $pegawai->sisa_cuti) {
+            $kekuranganHari = $jumlahHariKerja - $pegawai->sisa_cuti;
+
             return back()
                 ->withInput()
-                ->withErrors(['jumlah_hari' => 'Sisa cuti tidak mencukupi untuk durasi yang diajukan.']);
+                ->withErrors([
+                    'jumlah_hari' => "Sisa cuti tidak mencukupi. Anda mengajukan {$jumlahHariKerja} hari, sisa saat ini {$pegawai->sisa_cuti} hari, kurang {$kekuranganHari} hari.",
+                ]);
         }
 
         Cuti::create([
