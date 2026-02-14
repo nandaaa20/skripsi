@@ -102,7 +102,7 @@ class CutiController extends Controller
                 ]);
         }
 
-        Cuti::create([
+        $cuti = Cuti::create([
             'pegawai_id' => $pegawai->id,
             'tanggal_mulai' => $validated['tanggal_mulai'],
             'tanggal_selesai' => $validated['tanggal_selesai'],
@@ -118,9 +118,23 @@ class CutiController extends Controller
             ->all();
 
         if (! empty($admins)) {
-            Mail::raw("Ada pengajuan cuti baru dari {$pegawai->nama_lengkap} ({$pegawai->nip}) selama {$jumlahHariKerja} hari kerja.", function ($message) use ($admins) {
+            $tanggalMulai = Carbon::parse($cuti->tanggal_mulai)->translatedFormat('d M Y');
+            $tanggalSelesai = Carbon::parse($cuti->tanggal_selesai)->translatedFormat('d M Y');
+
+            $html = view('emails.cuti.pengajuan-admin', [
+                'namaPegawai' => $pegawai->nama_lengkap,
+                'nipPegawai' => $pegawai->nip,
+                'jenisCuti' => $cuti->jenis_cuti,
+                'tanggalMulai' => $tanggalMulai,
+                'tanggalSelesai' => $tanggalSelesai,
+                'jumlahHari' => $cuti->jumlah_hari,
+                'alasan' => $cuti->alasan,
+            ])->render();
+
+            Mail::send([], [], function ($message) use ($admins, $html) {
                 $message->to($admins)
-                    ->subject('Pengajuan Cuti Baru');
+                    ->subject('📩 Pengajuan Cuti Baru - SIMPEG')
+                    ->html($html);
             });
         }
 

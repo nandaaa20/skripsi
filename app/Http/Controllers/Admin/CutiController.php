@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cuti;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -65,9 +66,24 @@ class CutiController extends Controller
 
         $emailPegawai = $cuti->pegawai?->user?->email;
         if ($emailPegawai) {
-            Mail::raw("Status cuti Anda: {$cuti->status}.", function ($message) use ($emailPegawai) {
+            $statusText = ucfirst($cuti->status);
+            $statusColor = $cuti->status === 'disetujui' ? '#059669' : '#DC2626';
+
+            $html = view('emails.cuti.status-pegawai', [
+                'namaPegawai' => $cuti->pegawai->nama_lengkap,
+                'statusText' => $statusText,
+                'statusColor' => $statusColor,
+                'jenisCuti' => $cuti->jenis_cuti,
+                'tanggalMulai' => Carbon::parse($cuti->tanggal_mulai)->translatedFormat('d M Y'),
+                'tanggalSelesai' => Carbon::parse($cuti->tanggal_selesai)->translatedFormat('d M Y'),
+                'jumlahHari' => $cuti->jumlah_hari,
+                'catatanAdmin' => $cuti->catatan_admin,
+            ])->render();
+
+            Mail::send([], [], function ($message) use ($emailPegawai, $statusText, $html) {
                 $message->to($emailPegawai)
-                    ->subject('Status Pengajuan Cuti');
+                    ->subject("📌 Status Pengajuan Cuti: {$statusText}")
+                    ->html($html);
             });
         }
 
