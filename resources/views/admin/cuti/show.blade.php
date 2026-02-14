@@ -124,6 +124,10 @@
                             <label class="text-xs font-medium text-gray-500 uppercase tracking-wider">Departemen</label>
                             <p class="mt-1 text-sm text-gray-900">{{ $cuti->pegawai->departemen ?? '-' }}</p>
                         </div>
+                        <div>
+                            <label class="text-xs font-medium text-gray-500 uppercase tracking-wider">Sisa Cuti</label>
+                            <p class="mt-1 text-sm font-semibold text-emerald-700">{{ $cuti->pegawai->sisa_cuti }} hari (kuota: {{ $cuti->pegawai->kuota_cuti }} hari)</p>
+                        </div>
                     </div>
                 </div>
 

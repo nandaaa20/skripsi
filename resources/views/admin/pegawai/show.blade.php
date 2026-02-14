@@ -152,6 +152,13 @@
                                     </div>
 
                                     <div>
+                                        <label class="text-xs font-medium text-gray-600">Email</label>
+                                        <p class="mt-0.5 text-sm text-gray-900">
+                                            {{ $pegawai->user->email ?? '-' }}
+                                        </p>
+                                    </div>
+
+                                    <div>
                                         <label class="text-xs font-medium text-gray-600">Role</label>
                                         <p class="mt-0.5">
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
