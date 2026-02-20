@@ -86,6 +86,16 @@
                         @error('no_telepon')<p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>@enderror
                     </div>
 
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email Akun</label>
+                        <input type="email" name="email" value="{{ old('email', $pegawai->user->email ?? '') }}"
+                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('email') border-red-500 @enderror"
+                               placeholder="contoh: pegawai@email.com">
+                        @error('email')<p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>@enderror
+                        <p class="mt-1 text-xs text-gray-500">Email ini dipakai untuk notifikasi pengajuan dan keputusan cuti.</p>
+                    </div>
+
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Alamat Lengkap</label>
                         <textarea name="alamat" rows="4"
