@@ -1,0 +1,56 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Class Diagram SIMPEG">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="user" value="&lt;b&gt;User&lt;/b&gt;&lt;br/&gt;+ id&lt;br/&gt;+ nip&lt;br/&gt;+ name&lt;br/&gt;+ email&lt;br/&gt;+ role&lt;br/&gt;+ pegawai()"
+          style="rounded=0;whiteSpace=wrap;html=1;shape=rectangle;" vertex="1" parent="1">
+          <mxGeometry x="80" y="60" width="220" height="150" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pegawai" value="&lt;b&gt;Pegawai&lt;/b&gt;&lt;br/&gt;+ id&lt;br/&gt;+ user_id&lt;br/&gt;+ nip&lt;br/&gt;+ nama_lengkap&lt;br/&gt;+ kuota_cuti&lt;br/&gt;+ sisa_cuti&lt;br/&gt;+ cuti()&lt;br/&gt;+ kehadiran()&lt;br/&gt;+ user()"
+          style="rounded=0;whiteSpace=wrap;html=1;shape=rectangle;" vertex="1" parent="1">
+          <mxGeometry x="360" y="50" width="270" height="210" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cuti" value="&lt;b&gt;Cuti&lt;/b&gt;&lt;br/&gt;+ id&lt;br/&gt;+ nip&lt;br/&gt;+ tanggal_mulai&lt;br/&gt;+ tanggal_selesai&lt;br/&gt;+ jumlah_hari&lt;br/&gt;+ status&lt;br/&gt;+ pegawai()"
+          style="rounded=0;whiteSpace=wrap;html=1;shape=rectangle;" vertex="1" parent="1">
+          <mxGeometry x="700" y="40" width="250" height="180" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="kehadiran" value="&lt;b&gt;Kehadiran&lt;/b&gt;&lt;br/&gt;+ id&lt;br/&gt;+ nip&lt;br/&gt;+ tanggal&lt;br/&gt;+ status&lt;br/&gt;+ keterangan&lt;br/&gt;+ pegawai()"
+          style="rounded=0;whiteSpace=wrap;html=1;shape=rectangle;" vertex="1" parent="1">
+          <mxGeometry x="700" y="270" width="250" height="170" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="adminCutiController" value="&lt;b&gt;Admin\\CutiController&lt;/b&gt;&lt;br/&gt;+ index()&lt;br/&gt;+ show()&lt;br/&gt;+ updateStatus()"
+          style="rounded=0;whiteSpace=wrap;html=1;shape=rectangle;fillColor=#fff2cc;" vertex="1" parent="1">
+          <mxGeometry x="80" y="320" width="260" height="130" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pegawaiCutiController" value="&lt;b&gt;Pegawai\\CutiController&lt;/b&gt;&lt;br/&gt;+ index()&lt;br/&gt;+ create()&lt;br/&gt;+ store()"
+          style="rounded=0;whiteSpace=wrap;html=1;shape=rectangle;fillColor=#fff2cc;" vertex="1" parent="1">
+          <mxGeometry x="380" y="320" width="260" height="130" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="rel_user_pegawai" value="1..1" edge="1" parent="1" source="user" target="pegawai" style="endArrow=block;html=1;edgeStyle=orthogonalEdgeStyle;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_pegawai_cuti" value="1..*" edge="1" parent="1" source="pegawai" target="cuti" style="endArrow=block;html=1;edgeStyle=orthogonalEdgeStyle;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_pegawai_kehadiran" value="1..*" edge="1" parent="1" source="pegawai" target="kehadiran" style="endArrow=block;html=1;edgeStyle=orthogonalEdgeStyle;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="dep_admin_cuti" value="uses" edge="1" parent="1" source="adminCutiController" target="cuti" style="dashed=1;endArrow=open;html=1;edgeStyle=orthogonalEdgeStyle;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="dep_pegawai_cuti" value="uses" edge="1" parent="1" source="pegawaiCutiController" target="cuti" style="dashed=1;endArrow=open;html=1;edgeStyle=orthogonalEdgeStyle;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

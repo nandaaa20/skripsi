@@ -15,7 +15,7 @@ class KehadiranController extends Controller
 
         $kehadiran = Kehadiran::with('pegawai')
             ->where('tanggal', $tanggal)
-            ->orderBy('pegawai_id')
+            ->orderBy('nip')
             ->get();
 
         return view('admin.kehadiran.index', compact('kehadiran', 'tanggal'));
@@ -32,7 +32,7 @@ class KehadiranController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'pegawai_id' => 'required|exists:pegawai,id',
+            'nip' => 'required|exists:pegawai,nip',
             'tanggal'    => 'required|date',
             'status'     => 'required|in:hadir,izin,sakit,alpha',
             'keterangan' => 'nullable|string',
@@ -40,7 +40,7 @@ class KehadiranController extends Controller
 
         Kehadiran::updateOrCreate(
             [
-                'pegawai_id' => $request->pegawai_id,
+                'nip' => $request->nip,
                 'tanggal'    => $request->tanggal,
             ],
             [

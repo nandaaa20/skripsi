@@ -1,0 +1,45 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="ERD Kepegawaian (Updated)">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="users" value="&lt;b&gt;users&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;id : bigint (PK)&lt;br/&gt;nip : varchar (UK)&lt;br/&gt;name : varchar(255)&lt;br/&gt;email : varchar(255) nullable&lt;br/&gt;password : varchar(255)&lt;br/&gt;role : varchar(255)&lt;br/&gt;email_verified_at : timestamp nullable&lt;br/&gt;remember_token : varchar(100) nullable&lt;br/&gt;created_at : timestamp&lt;br/&gt;updated_at : timestamp"
+          style="rounded=0;whiteSpace=wrap;html=1;shape=rectangle;spacingTop=10;spacingLeft=10;spacingRight=10;spacingBottom=10;" vertex="1" parent="1">
+          <mxGeometry x="80" y="90" width="330" height="255" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pegawai" value="&lt;b&gt;pegawai&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;id : bigint (PK)&lt;br/&gt;user_id : bigint (FK - users.id)&lt;br/&gt;nip : varchar(50) (UK)&lt;br/&gt;nama_lengkap : varchar(150)&lt;br/&gt;jabatan : varchar(100) nullable&lt;br/&gt;departemen : varchar(100) nullable&lt;br/&gt;jenis_kelamin : enum('L','P') nullable&lt;br/&gt;tanggal_lahir : date nullable&lt;br/&gt;no_telepon : varchar(20) nullable&lt;br/&gt;alamat : text nullable&lt;br/&gt;tanggal_masuk : date nullable&lt;br/&gt;status_kepegawaian : enum('aktif','nonaktif','kontrak')&lt;br/&gt;kuota_cuti : int default 12&lt;br/&gt;sisa_cuti : int default 12&lt;br/&gt;created_at : timestamp&lt;br/&gt;updated_at : timestamp"
+          style="rounded=0;whiteSpace=wrap;html=1;shape=rectangle;spacingTop=10;spacingLeft=10;spacingRight=10;spacingBottom=10;" vertex="1" parent="1">
+          <mxGeometry x="470" y="60" width="430" height="360" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cuti" value="&lt;b&gt;cuti&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;id : bigint (PK)&lt;br/&gt;nip : varchar(50) (FK - pegawai.nip)&lt;br/&gt;tanggal_mulai : date&lt;br/&gt;tanggal_selesai : date&lt;br/&gt;jumlah_hari : int default 0&lt;br/&gt;jenis_cuti : varchar(50) nullable&lt;br/&gt;alasan : text nullable&lt;br/&gt;status : enum('pending','disetujui','ditolak')&lt;br/&gt;catatan_admin : text nullable&lt;br/&gt;created_at : timestamp&lt;br/&gt;updated_at : timestamp"
+          style="rounded=0;whiteSpace=wrap;html=1;shape=rectangle;spacingTop=10;spacingLeft=10;spacingRight=10;spacingBottom=10;" vertex="1" parent="1">
+          <mxGeometry x="980" y="70" width="430" height="260" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="kehadiran" value="&lt;b&gt;kehadiran&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;id : bigint (PK)&lt;br/&gt;nip : varchar(50) (FK - pegawai.nip)&lt;br/&gt;tanggal : date&lt;br/&gt;status : enum('hadir','izin','sakit','alpha')&lt;br/&gt;keterangan : text nullable&lt;br/&gt;created_at : timestamp&lt;br/&gt;updated_at : timestamp&lt;br/&gt;UNIQUE (nip, tanggal)"
+          style="rounded=0;whiteSpace=wrap;html=1;shape=rectangle;spacingTop=10;spacingLeft=10;spacingRight=10;spacingBottom=10;" vertex="1" parent="1">
+          <mxGeometry x="980" y="390" width="430" height="215" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="rel_users_pegawai" value="1 - 1" edge="1" parent="1" source="users" target="pegawai"
+          style="endArrow=block;endFill=1;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;edgeStyle=orthogonalEdgeStyle;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="rel_pegawai_cuti" value="1 - N" edge="1" parent="1" source="pegawai" target="cuti"
+          style="endArrow=block;endFill=1;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;edgeStyle=orthogonalEdgeStyle;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="rel_pegawai_kehadiran" value="1 - N" edge="1" parent="1" source="pegawai" target="kehadiran"
+          style="endArrow=block;endFill=1;html=1;rounded=0;orthogonalLoop=1;jettySize=auto;edgeStyle=orthogonalEdgeStyle;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

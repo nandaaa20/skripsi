@@ -39,6 +39,17 @@
             </div>
         @endif
 
+        <div class="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white border border-emerald-200 rounded-lg p-4">
+                <p class="text-xs uppercase tracking-wider text-emerald-700 font-semibold">Kuota Cuti Tahunan</p>
+                <p class="text-2xl font-bold text-emerald-900 mt-1">{{ $pegawai->kuota_cuti }} hari</p>
+            </div>
+            <div class="bg-white border border-blue-200 rounded-lg p-4">
+                <p class="text-xs uppercase tracking-wider text-blue-700 font-semibold">Sisa Cuti Saat Ini</p>
+                <p class="text-2xl font-bold text-blue-900 mt-1">{{ $pegawai->sisa_cuti }} hari</p>
+            </div>
+        </div>
+
         {{-- Info Banner --}}
         <div class="mb-6 bg-emerald-50 border-l-4 border-emerald-400 p-4 rounded-r-lg">
             <div class="flex items-start">

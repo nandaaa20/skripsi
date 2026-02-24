@@ -12,7 +12,7 @@ class Kehadiran extends Model
     protected $table = 'kehadiran';
 
     protected $fillable = [
-        'pegawai_id',
+        'nip',
         'tanggal',
         'status',
         'keterangan',
@@ -20,6 +20,6 @@ class Kehadiran extends Model
 
     public function pegawai()
     {
-        return $this->belongsTo(Pegawai::class);
+        return $this->belongsTo(Pegawai::class, 'nip', 'nip');
     }
 }
