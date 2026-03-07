@@ -10,18 +10,16 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // Admin
         User::updateOrCreate(
             ['nip' => '18200001'],
             [
                 'name' => 'Admin Sistem',
-                'email' => 'admin@pegawai.test',
+                'email' => 'faridmuhammad7472@gmail.com',
                 'password' => Hash::make('admin123'),
                 'role' => 'admin',
             ]
         );
 
-        // Beberapa pegawai
         $pegawai = [
             ['nip' => '18220001', 'name' => 'Pegawai Satu'],
             ['nip' => '18220002', 'name' => 'Pegawai Dua'],
