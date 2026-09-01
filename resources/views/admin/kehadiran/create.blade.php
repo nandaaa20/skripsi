@@ -113,12 +113,12 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                             </svg>
                         </div>
-                        <select name="pegawai_id" 
-                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 appearance-none @error('pegawai_id') border-red-500 @enderror"
+                        <select name="nip" 
+                                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 appearance-none @error('nip') border-red-500 @enderror"
                                 required>
                             <option value="">- Pilih Pegawai -</option>
                             @foreach($pegawai as $p)
-                                <option value="{{ $p->id }}" @selected(old('pegawai_id') == $p->id)>
+                                <option value="{{ $p->nip }}" @selected(old('nip') == $p->nip)>
                                     {{ $p->nama_lengkap }} ({{ $p->nip }})
                                 </option>
                             @endforeach
@@ -129,7 +129,7 @@
                             </svg>
                         </div>
                     </div>
-                    @error('pegawai_id')
+                    @error('nip')
                         <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                     @enderror
                     <p class="mt-1.5 text-xs text-gray-500">

@@ -33,6 +33,19 @@
             </div>
         @endif
 
+        @if($pegawai)
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div class="bg-white rounded-lg shadow-sm p-4 border-l-4 border-blue-500">
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Kuota Cuti Tahunan</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">{{ $pegawai->kuota_cuti }} hari</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm p-4 border-l-4 border-emerald-500">
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Sisa Cuti</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">{{ $pegawai->sisa_cuti }} hari</p>
+                </div>
+            </div>
+        @endif
+
         {{-- Stats Summary --}}
         @if($cuti->count() > 0)
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

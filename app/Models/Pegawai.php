@@ -24,6 +24,8 @@ class Pegawai extends Model
         'alamat',
         'tanggal_masuk',
         'status_kepegawaian',
+        'kuota_cuti',
+        'sisa_cuti',
     ];
 
     // Agar tidak ada overwrite mass assignment
@@ -60,12 +62,12 @@ class Pegawai extends Model
 
     public function cuti()
     {
-        return $this->hasMany(\App\Models\Cuti::class);
+        return $this->hasMany(\App\Models\Cuti::class, 'nip', 'nip');
     }
 
     public function kehadiran()
     {
-        return $this->hasMany(\App\Models\Kehadiran::class);
+        return $this->hasMany(\App\Models\Kehadiran::class, 'nip', 'nip');
     }
 
     public function user()
